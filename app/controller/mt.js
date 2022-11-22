@@ -3,13 +3,13 @@ const md5 = require("md5")
 
 class MtController extends Controller {
     async aderMeituan(params) {
-        this.logger.info("----- 美团上报 node 层 处理开始 ↓ -----")
+        
         if (!params.source){
             this.ctx.body = { code: 300, data : "缺少source参数" };
             this.ctx.status =  200;
             return
         }
-            
+        this.logger.info("----- 美团上报 node 层 处理开始 ↓ -----")   
         let feedback_base_url = `https://admspi.zystarlink.com/mt/mtOcpxActivate`
         const source = params.source;
         delete params['source'];

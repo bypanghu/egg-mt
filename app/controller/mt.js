@@ -3,6 +3,7 @@ const md5 = require("md5")
 
 class MtController extends Controller {
     async aderMeituan(params) {
+        this.logger.info("----- 美团上报 node 层 处理开始 ↓ -----")
         if (!params.source)
             throw new Error(this.ctx.request.href + ' 缺少source参数');
         let feedback_base_url = `https://admspi.zystarlink.com/mt/mtOcpxActivate`
@@ -33,13 +34,23 @@ class MtController extends Controller {
             url += '&' + key + '=' + reqData[key];
         }
         const req = await this.ctx.curl(url, { dataType: 'json', timeout: 30000 });
-        if (req.status != 200 || req.data.ret != 0)
+        if (req.status != 200 || req.data.ret != 0){
             this.logger.error(
                 '美团处理异常: ' +
                 this.ctx.request.href +
                 ' ' +
                 JSON.stringify(req.data)
             );
+            this.logger.info("-----美团上报 node 层 处理 结束 ↑ -----")
+            this.ctx.body = { code: 300, data : "上传失败" };
+            this.ctx.status =  200;
+        }else{
+            this.logger.info(`------美团上传成功------ url ====> ${url}`)
+            this.logger.info("-----美团上报 node 层 处理 结束 ↑ -----")
+            this.ctx.body = { code: 200, data : "上传成功" };
+            this.ctx.status =  200;
+        }
+            
     }
 }
 

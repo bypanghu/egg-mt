@@ -5,14 +5,16 @@ class MtController extends Controller {
     async aderMeituan(params) {
         if (!params.source)
             throw new Error(this.ctx.request.href + ' 缺少source参数');
+        let feedback_base_url = `https://admspi.zystarlink.com/mt/mtOcpxActivate`
         const source = params.source;
         delete params['source'];
         const { oaid, oaid_md5, imei, imei_md5, ts } = params;
-        let feedback_url =
-            this.ctx.request.href.split('?')[0].replace('click', 'feedback') + '?';
-        for (const key in params) {
-            feedback_url += '&' + key + '=' + params[key];
-        }
+        // let feedback_url =
+        //     this.ctx.request.href.split('?')[0].replace('click', 'feedback') + '?';
+        // for (const key in params) {
+        //     feedback_url += '&' + key + '=' + params[key];
+        // }
+        let feedback_url = `${feedback_base_url}?mtName=${params.mtName}&clickId=${params.clickId}`
         const reqData = {
             source: source,
             feedback_url: encodeURIComponent(feedback_url),
